@@ -26,6 +26,7 @@ export interface ICompositeBarOptions {
 	orientation: ActionsOrientation;
 	composites: { id: string, name: string }[];
 	colors: ICompositeBarColors;
+	overflowActionSize: number;
 	getActivityAction: (compositeId: string) => ActivityAction;
 	getCompositePinnedAction: (compositeId: string) => Action;
 	getOnCompositeClickAction: (compositeId: string) => Action;
@@ -36,7 +37,6 @@ export interface ICompositeBarOptions {
 
 export class CompositeBar implements ICompositeBar {
 
-	private static OVERFLOW_ACTION_SIZE = 50;
 	private _onDidContextMenu: Emitter<MouseEvent>;
 
 	private dimension: Dimension;
@@ -220,10 +220,17 @@ export class CompositeBar implements ICompositeBar {
 			}
 			overflows = compositesToShow.length > maxVisible;
 
-			compositesToShow = compositesToShow.slice(0, maxVisible);
-			// Check if we need to make room for the overflow action
-			if (overflows && (size + CompositeBar.OVERFLOW_ACTION_SIZE - this.compositeSizeInBar.get(compositesToShow[maxVisible - 1]) - this.compositeSizeInBar.get(compositesToShow[maxVisible]) > limit)) {
+			if (overflows) {
+				size -= this.compositeSizeInBar.get(compositesToShow[maxVisible]);
+				compositesToShow = compositesToShow.slice(0, maxVisible);
+			}
+			// Check if we need to make extra room for the overflow action
+			if (overflows && (size + this.options.overflowActionSize > limit)) {
 				compositesToShow.pop();
+			}
+			if (this.activeCompositeId && compositesToShow.length && compositesToShow.indexOf(this.activeCompositeId) === -1) {
+				compositesToShow.pop();
+				compositesToShow.push(this.activeCompositeId);
 			}
 		}
 
@@ -241,9 +248,9 @@ export class CompositeBar implements ICompositeBar {
 			this.compositeOverflowActionItem = null;
 		}
 
-		// Pull out composites that overflow or got hidden
-		visibleComposites.forEach(compositeId => {
-			if (compositesToShow.indexOf(compositeId) === -1) {
+		// Pull out composites that overflow, got hidden or changed position
+		visibleComposites.forEach((compositeId, index) => {
+			if (compositesToShow.indexOf(compositeId) !== index) {
 				this.pullComposite(compositeId);
 			}
 		});
@@ -327,7 +334,7 @@ export class CompositeBar implements ICompositeBar {
 
 		const compositeActivityAction = this.options.getActivityAction(compositeId);
 		const pinnedAction = this.options.getCompositePinnedAction(compositeId);
-		this.compositeIdToActionItems[compositeId] = this.instantiationService.createInstance(CompositeActionItem, compositeActivityAction, pinnedAction, this.options.colors, this);
+		this.compositeIdToActionItems[compositeId] = this.instantiationService.createInstance(CompositeActionItem, compositeActivityAction, pinnedAction, this.options.colors, this.options.icon, this);
 		this.compositeIdToActions[compositeId] = compositeActivityAction;
 
 		return compositeActivityAction;
@@ -421,6 +428,11 @@ export class CompositeBar implements ICompositeBar {
 
 	public layout(dimension: Dimension): void {
 		this.dimension = dimension;
+		if (dimension.height === 0 || dimension.width === 0) {
+			// Do not layout if not visible. Otherwise the size measurment would be computed wrongly
+			return;
+		}
+
 		if (this.compositeSizeInBar.size === 0) {
 			// Compute size of each composite by getting the size from the css renderer
 			// Size is later used for overflow computation

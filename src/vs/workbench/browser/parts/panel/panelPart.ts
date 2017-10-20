@@ -41,6 +41,7 @@ export class PanelPart extends CompositePart<Panel> implements IPanelService {
 
 	private blockOpeningPanel: boolean;
 	private compositeBar: CompositeBar;
+	private dimension: Dimension;
 
 	constructor(
 		id: string,
@@ -84,6 +85,7 @@ export class PanelPart extends CompositePart<Panel> implements IPanelService {
 			getOnCompositeClickAction: (compositeId: string) => this.instantiationService.createInstance(OpenPanelAction, this.getPanel(compositeId)),
 			getDefaultCompositeId: () => Registry.as<PanelRegistry>(PanelExtensions.Panels).getDefaultPanelId(),
 			hidePart: () => this.partService.setPanelHidden(true),
+			overflowActionSize: 28,
 			colors: {
 				backgroundColor: PANEL_BACKGROUND,
 				badgeBackground,
@@ -99,7 +101,11 @@ export class PanelPart extends CompositePart<Panel> implements IPanelService {
 	private registerListeners(): void {
 
 		// Activate panel action on opening of a panel
-		this.toUnbind.push(this.onDidPanelOpen(panel => this.compositeBar.activateComposite(panel.getId())));
+		this.toUnbind.push(this.onDidPanelOpen(panel => {
+			this.compositeBar.activateComposite(panel.getId());
+			// Need to relayout composite bar since different panels have different action bar width
+			this.layoutCompositeBar();
+		}));
 
 		// Deactivate panel action on close
 		this.toUnbind.push(this.onDidPanelClose(panel => this.compositeBar.deactivateComposite(panel.getId())));
@@ -207,14 +213,21 @@ export class PanelPart extends CompositePart<Panel> implements IPanelService {
 
 		// Pass to super
 		const sizes = super.layout(dimension);
-		let availableWidth = dimension.width;
-		if (this.toolBar) {
-			// adjust height for global actions showing
-			availableWidth -= this.toolBar.getContainer().getHTMLElement().offsetWidth;
-		}
-		this.compositeBar.layout(new Dimension(availableWidth, dimension.height));
+		this.dimension = dimension;
+		this.layoutCompositeBar();
 
 		return sizes;
+	}
+
+	private layoutCompositeBar(): void {
+		if (this.dimension) {
+			let availableWidth = this.dimension.width - 8; // take padding into account
+			if (this.toolBar) {
+				// adjust height for global actions showing
+				availableWidth -= this.toolBar.getContainer().getHTMLElement().offsetWidth;
+			}
+			this.compositeBar.layout(new Dimension(availableWidth, this.dimension.height));
+		}
 	}
 
 	public shutdown(): void {

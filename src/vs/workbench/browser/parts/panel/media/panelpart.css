@@ -32,11 +32,13 @@
 
 /** Panel Switcher */
 
-.monaco-workbench > .part.panel .composite-bar > .monaco-action-bar .action-label.toggle-more {
+.monaco-workbench > .part.panel > .title > .panel-switcher-container.composite-bar > .monaco-action-bar .action-label.toggle-more {
 	background: url('ellipsis.svg') center center no-repeat;
 	display: block;
 	height: 35px;
 	min-width: 28px;
+	margin-left: 0px;
+	margin-right: 0px;
 }
 
 .monaco-workbench > .part.panel > .title > .panel-switcher-container > .monaco-action-bar {
@@ -107,4 +109,9 @@
 .vs-dark .monaco-workbench .hide-panel-action,
 .hc-black .monaco-workbench .hide-panel-action {
 	background: url('close-inverse.svg') center center no-repeat;
+}
+
+.vs-dark .monaco-workbench > .part.panel > .title > .panel-switcher-container.composite-bar > .monaco-action-bar .action-label.toggle-more,
+.hc-black .monaco-workbench > .part.panel > .title > .panel-switcher-container.composite-bar > .monaco-action-bar .action-label.toggle-more {
+	background: url('ellipsis-inverse.svg') center center no-repeat;
 }

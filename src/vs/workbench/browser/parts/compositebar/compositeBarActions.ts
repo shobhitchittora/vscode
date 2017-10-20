@@ -130,7 +130,7 @@ export class ActivityActionItem extends BaseActionItem {
 		const theme = this.themeService.getTheme();
 
 		// Label
-		if (this.$label) {
+		if (this.$label && this.options.icon) {
 			const background = theme.getColor(this.options.colors.backgroundColor);
 
 			this.$label.style('background-color', background ? background.toString() : null);
@@ -381,13 +381,14 @@ export class CompositeActionItem extends ActivityActionItem {
 		private compositeActivityAction: ActivityAction,
 		private toggleCompositePinnedAction: Action,
 		colors: ICompositeBarColors,
+		icon: boolean,
 		private compositeBar: ICompositeBar,
 		@IContextMenuService private contextMenuService: IContextMenuService,
 		@IKeybindingService private keybindingService: IKeybindingService,
 		@IInstantiationService instantiationService: IInstantiationService,
 		@IThemeService themeService: IThemeService
 	) {
-		super(compositeActivityAction, { draggable: true, colors }, themeService);
+		super(compositeActivityAction, { draggable: true, colors, icon }, themeService);
 
 		this.cssClass = compositeActivityAction.class;
 
