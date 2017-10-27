@@ -467,6 +467,15 @@ export default class TypeScriptServiceClient implements ITypescriptServiceClient
 			return;
 		}
 
+		const args: Proto.SetCompilerOptionsForInferredProjectsArgs = {
+			options: this.getCompilerOptionsForInferredProjects(configuration)
+		};
+		this.execute('compilerOptionsForInferredProjects', args, true).catch((err) => {
+			this.error(`'compilerOptionsForInferredProjects' request failed with error.`, err);
+		});
+	}
+
+	private getCompilerOptionsForInferredProjects(configuration: TypeScriptServiceConfiguration): Proto.ExternalProjectCompilerOptions {
 		const compilerOptions: Proto.ExternalProjectCompilerOptions = {
 			module: 'CommonJS' as Proto.ModuleKind,
 			target: 'ES6' as Proto.ScriptTarget,
@@ -480,13 +489,7 @@ export default class TypeScriptServiceClient implements ITypescriptServiceClient
 			compilerOptions.checkJs = configuration.checkJs;
 			compilerOptions.experimentalDecorators = configuration.experimentalDecorators;
 		}
-
-		const args: Proto.SetCompilerOptionsForInferredProjectsArgs = {
-			options: compilerOptions
-		};
-		this.execute('compilerOptionsForInferredProjects', args, true).catch((err) => {
-			this.error(`'compilerOptionsForInferredProjects' request failed with error.`, err);
-		});
+		return compilerOptions;
 	}
 
 	private serviceExited(restart: boolean): void {
