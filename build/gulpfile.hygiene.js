@@ -135,7 +135,7 @@ const copyrightHeader = [
 ].join('\n');
 
 gulp.task('eslint', () => {
-	return gulp.src(all, { base: '.' })
+	return vfs.src(all, { base: '.', follow: true, allowEmpty: true })
 		.pipe(filter(eslintFilter))
 		.pipe(gulpeslint('src/.eslintrc'))
 		.pipe(gulpeslint.formatEach('compact'))
@@ -145,7 +145,7 @@ gulp.task('eslint', () => {
 gulp.task('tslint', () => {
 	const options = { emitError: false };
 
-	return gulp.src(all, { base: '.' })
+	return vfs.src(all, { base: '.', follow: true, allowEmpty: true })
 		.pipe(filter(tslintFilter))
 		.pipe(gulptslint({ rulesDirectory: 'build/lib/tslint' }))
 		.pipe(gulptslint.report(options));
