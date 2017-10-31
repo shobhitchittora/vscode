@@ -19,6 +19,8 @@ import { IRelativePattern } from 'vs/base/common/glob';
 import { IWorkspaceEditingService } from 'vs/workbench/services/workspace/common/workspaceEditing';
 import { IMessageService } from 'vs/platform/message/common/message';
 import { localize } from 'vs/nls';
+import { getPathLabel } from 'vs/base/common/labels';
+import { IEnvironmentService } from 'vs/platform/environment/common/environment';
 
 @extHostNamedCustomer(MainContext.MainThreadWorkspace)
 export class MainThreadWorkspace implements MainThreadWorkspaceShape {
@@ -36,7 +38,8 @@ export class MainThreadWorkspace implements MainThreadWorkspaceShape {
 		//@ts-ignore unused injected service
 		@IFileService private readonly _fileService: IFileService,
 		@IWorkspaceEditingService private _workspaceEditingService: IWorkspaceEditingService,
-		@IMessageService private _messageService: IMessageService
+		@IMessageService private _messageService: IMessageService,
+		@IEnvironmentService private _environmentService: IEnvironmentService
 	) {
 		this._proxy = extHostContext.get(ExtHostContext.ExtHostWorkspace);
 		this._contextService.onDidChangeWorkspaceFolders(this._onDidChangeWorkspace, this, this._toDispose);
@@ -85,9 +88,9 @@ export class MainThreadWorkspace implements MainThreadWorkspaceShape {
 
 		return this._messageService.confirm({
 			message: isRemove ?
-				localize('folderMessageRemove', "Extension {0} wants to remove a folder from the workspace. Please confirm.", extensionName) :
-				localize('folderMessageAdd', "Extension {0} wants to add a folder to the workspace. Please confirm.", extensionName),
-			detail: localize('folderPath', "Folder path: '{0}'", uri.scheme === 'file' ? uri.fsPath : uri.toString()),
+				localize('folderMessageRemove', "Extension '{0}' wants to remove a folder from the workspace. Please confirm.", extensionName) :
+				localize('folderMessageAdd', "Extension '{0}' wants to add a folder to the workspace. Please confirm.", extensionName),
+			detail: localize('folderPath', "Folder path: {0}", uri.scheme === 'file' ? getPathLabel(uri.fsPath, null, this._environmentService) : uri.toString()),
 			type: 'question',
 			primaryButton: isRemove ? localize('removeFolder', "&&Remove Folder") : localize('addFolder', "&&Add Folder"),
 			checkbox: {
