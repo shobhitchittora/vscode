@@ -29,7 +29,7 @@ const all = [
 	'extensions/**/*',
 	'scripts/**/*',
 	'src/**/*',
-	// 'test/**/*'  // leads EIISDIR error
+	'test/**/*'
 ];
 
 const eolFilter = [
@@ -220,7 +220,7 @@ const hygiene = exports.hygiene = (some, options) => {
 			console.error(`${name}:${line + 1}:${character + 1}:${failure.failure}`);
 		});
 	}
-	
+
 	const tsl = es.through(function (file) {
 		const configuration = tslint.Configuration.findConfiguration(null, '.');
 		const options = { formatter: 'json', rulesDirectory: 'build/lib/tslint' };
