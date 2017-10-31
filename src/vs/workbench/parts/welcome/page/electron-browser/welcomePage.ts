@@ -243,7 +243,9 @@ class WelcomePage {
 		@IExtensionTipsService private tipsService: IExtensionTipsService,
 		@IExtensionsWorkbenchService private extensionsWorkbenchService: IExtensionsWorkbenchService,
 		@ILifecycleService lifecycleService: ILifecycleService,
+		//@ts-ignore unused injected service
 		@IThemeService private themeService: IThemeService,
+		//@ts-ignore unused injected service
 		@IExperimentService private experimentService: IExperimentService,
 		@ITelemetryService private telemetryService: ITelemetryService
 	) {
@@ -358,7 +360,7 @@ class WelcomePage {
 					this.updateInstalledExtensions(container, installedExtensions);
 					break;
 				}
-			};
+			}
 		}));
 	}
 
