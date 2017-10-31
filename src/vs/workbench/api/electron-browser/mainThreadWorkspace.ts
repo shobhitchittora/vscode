@@ -33,6 +33,7 @@ export class MainThreadWorkspace implements MainThreadWorkspaceShape {
 		@IWorkspaceContextService private readonly _contextService: IWorkspaceContextService,
 		@ITextFileService private readonly _textFileService: ITextFileService,
 		@IConfigurationService private _configurationService: IConfigurationService,
+		//@ts-ignore unused injected service
 		@IFileService private readonly _fileService: IFileService,
 		@IWorkspaceEditingService private _workspaceEditingService: IWorkspaceEditingService,
 		@IMessageService private _messageService: IMessageService

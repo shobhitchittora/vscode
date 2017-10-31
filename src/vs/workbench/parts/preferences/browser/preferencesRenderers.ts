@@ -1105,6 +1105,7 @@ class UnsupportedSettingsRenderer extends Disposable {
 	constructor(
 		private editor: editorCommon.ICommonCodeEditor,
 		private settingsEditorModel: SettingsEditorModel,
+		//@ts-ignore unused injected service
 		@IWorkspaceConfigurationService private configurationService: IWorkspaceConfigurationService,
 		@IMarkerService private markerService: IMarkerService,
 		@IEnvironmentService private environmentService: IEnvironmentService

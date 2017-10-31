@@ -37,7 +37,7 @@ import {
 	ITaskSystem, ITaskSummary, ITaskExecuteResult, TaskExecuteKind, TaskError, TaskErrors, ITaskResolver,
 	TelemetryEvent, Triggers, TaskSystemEvents, TaskEvent, TaskType, TaskTerminateResponse
 } from 'vs/workbench/parts/tasks/common/taskSystem';
-
+//@ts-ignore unused type
 interface PrimaryTerminal {
 	terminal: ITerminalInstance;
 	busy: boolean;

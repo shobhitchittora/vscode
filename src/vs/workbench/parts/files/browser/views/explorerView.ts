@@ -101,6 +101,7 @@ export class ExplorerView extends ViewsViewletPanel {
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IConfigurationService private configurationService: IConfigurationService,
 		@IWorkbenchThemeService private themeService: IWorkbenchThemeService,
+		//@ts-ignore unused injected service
 		@IEnvironmentService private environmentService: IEnvironmentService,
 		@IDecorationsService decorationService: IDecorationsService
 	) {

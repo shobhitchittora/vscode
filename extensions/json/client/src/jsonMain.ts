@@ -259,8 +259,8 @@ function getSettings(): Settings {
 					folderPath = folderPath + '/';
 				}
 				collectSchemaSettings(folderSchemas, folderUri.fsPath, folderPath + '*');
-			};
-		};
+			}
+		}
 	}
 	return settings;
 }
