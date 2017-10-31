@@ -2,6 +2,33 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"type": "npm",
+			"script": "watch",
+			"label": "Build VS Code",
+			"group": "build",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": {
+				"owner": "typescript",
+				"applyTo": "closedDocuments",
+				"fileLocation": [
+					"absolute"
+				],
+				"pattern": {
+					"regexp": "Error: ([^(]+)\\((\\d+|\\d+,\\d+|\\d+,\\d+,\\d+,\\d+)\\): (.*)$",
+					"file": 1,
+					"location": 2,
+					"message": 3
+				},
+				"background": {
+					"beginsPattern": "Starting compilation",
+					"endsPattern": "Finished compilation"
+				}
+			}
+		},
+		{
 			"type": "gulp",
 			"task": "tslint",
 			"label": "Run tslint",
@@ -40,28 +67,6 @@
 			"type": "gulp",
 			"task": "hygiene",
 			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "compile",
-			"isBackground": true,
-			"problemMatcher": {
-				"owner": "typescript",
-				"applyTo": "closedDocuments",
-				"fileLocation": [
-					"absolute"
-				],
-				"pattern": {
-					"regexp": "Error: ([^(]+)\\((\\d+|\\d+,\\d+|\\d+,\\d+,\\d+,\\d+)\\): (.*)$",
-					"file": 1,
-					"location": 2,
-					"message": 3
-				},
-				"background": {
-					"beginsPattern": "Starting compilation",
-					"endsPattern": "Finished compilation"
-				}
-			}
 		}
 	]
 }
